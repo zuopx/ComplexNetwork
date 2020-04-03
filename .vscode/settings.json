@@ -5,5 +5,6 @@
     "python.testing.nosetestsEnabled": false,
     "python.testing.pytestArgs": [
         "src", "-s", "-v", "--disable-warnings", "--setup-show",
-    ]
+    ],
+    "python.dataScience.jupyterServerURI": "http://localhost:8888/?token=792ae8c74d0a8afe6a17318feb66b97f804d53f1ad243120"
 }

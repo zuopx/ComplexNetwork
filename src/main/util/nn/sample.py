@@ -15,7 +15,7 @@ def get_samples_order_independent_net(nodes: list, node_emb: dict,
              for i in range(samples_num) for j in range(i + 1, samples_num)]
     samples = []
     for p in pairs:
-        sample = node_emb[str(p[0])] + node_emb[str(p[1])] + [int(target[p[0]] < target[p[1]])]
+        sample = node_emb[str(p[0])] + node_emb[str(p[1])] + [int(target[p[0]] > target[p[1]])]
         samples.append(sample)
     samples = torch.Tensor(samples)
     return samples
