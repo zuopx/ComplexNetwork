@@ -1,5 +1,7 @@
 import torch
+import config
 
+DEVICE = config.get_DEVICE()
 
 class TwoLayersSequential(torch.nn.Sequential):
     def __init__(self, D_in: int, D_out: int, activation: type):
@@ -38,4 +40,4 @@ class OrderIndependentNet(torch.nn.Module):
         for i in range(self._D_out):
             y[:, i] = self.sequential(
                 x[:, i * self._sequential_d_in:(i + 1) * self._sequential_d_in]).squeeze()
-        return self.log_softmax(y)
+        return self.log_softmax(y).to(device=DEVICE)
