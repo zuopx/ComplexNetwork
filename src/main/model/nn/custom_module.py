@@ -31,10 +31,11 @@ class OrderIndependentNet(torch.nn.Module):
         self._sequential_d_in = D_in // D_out
         assert D_in % D_out == 0, f"{D_in} must be divisible by {D_out}."
         self.sequential = ThereLayersSequential(D_in // D_out, 1, activation)
+        self.log_softmax = torch.nn.LogSoftmax(dim=1)
 
     def forward(self, x):
         y = torch.empty(x.size()[0], self._D_out)
         for i in range(self._D_out):
             y[:, i] = self.sequential(
                 x[:, i * self._sequential_d_in:(i + 1) * self._sequential_d_in]).squeeze()
-        return y
+        return self.log_softmax(y)

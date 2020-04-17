@@ -21,7 +21,7 @@ class Conf:
 
 
 def classify(samples: torch.Tensor, D_out: int, conf: Conf, ax=None):
-    assert isinstance(conf.loss_fn, torch.nn.CrossEntropyLoss)
+    # assert isinstance(conf.loss_fn, torch.nn.CrossEntropyLoss)
     D_in = samples.size()[1] - 1
     training_set, validation_set = sample.split_samples(samples)
     training_x = training_set[:, :D_in].to(device=DEVICE)

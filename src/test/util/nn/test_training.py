@@ -10,7 +10,7 @@ def test_classify(samples: torch.Tensor):
     conf = training.Conf()
     conf.model = custom_module.OrderIndependentNet
     conf.activation = torch.nn.RReLU
-    conf.loss_fn = torch.nn.CrossEntropyLoss()
+    conf.loss_fn = torch.nn.NLLLoss()
     conf.lr = 1e-2
     D_out = 2
     model = training.classify(samples, D_out, conf)
