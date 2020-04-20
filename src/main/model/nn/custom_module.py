@@ -36,8 +36,8 @@ class OrderIndependentNet(torch.nn.Module):
         self.log_softmax = torch.nn.LogSoftmax(dim=1)
 
     def forward(self, x):
-        y = torch.empty(x.size()[0], self._D_out)
+        y = torch.empty(x.size()[0], self._D_out).to(device=x.device)
         for i in range(self._D_out):
             y[:, i] = self.sequential(
                 x[:, i * self._sequential_d_in:(i + 1) * self._sequential_d_in]).squeeze()
-        return self.log_softmax(y).to(device=DEVICE)
+        return self.log_softmax(y)

@@ -16,7 +16,7 @@ class Conf:
         self.activation = torch.nn.RReLU
         self.optimizer = torch.optim.Adam
         self.loss_fn = torch.nn.MSELoss()
-        self.lr = 1e-4
+        self.lr = 1e-2
         self.n_epochs = 1000
 
 
@@ -41,6 +41,8 @@ def classify(samples: torch.Tensor, D_out: int, conf: Conf, ax=None):
         optimizer.zero_grad()
         training_loss.backward()
         optimizer.step()
+    if DEVICE == torch.device("cuda:0"):
+        torch.cuda.empty_cache()
     training_hit_rate = hit_rate(training_y_guess, training_y)
     validation_hit_rate = hit_rate(validation_y_guess, validation_y)
     print(f'training hit rate --> {training_hit_rate: .8f},\
