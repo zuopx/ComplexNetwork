@@ -1,9 +1,9 @@
 import torch
-
+import os
 
 class GlobalVar:
 
-    DB = 'E:/Projects/ComplexNetwork/db'
+    DB = os.path.join(os.getcwd(), 'db')
 
     DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
