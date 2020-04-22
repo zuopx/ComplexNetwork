@@ -8,13 +8,12 @@ def get_samples_sequential():
 
 
 def get_samples_order_independent_net(nodes: list, node_emb: dict,
-                                      target: list, sample_rate: float=0.1) -> torch.Tensor:
-    samples_num = round(len(nodes) * sample_rate)
-    sample_nodes = random.sample(nodes, samples_num)
-    pairs = [(sample_nodes[i], sample_nodes[j])
-             for i in range(samples_num) for j in range(i + 1, samples_num)]
+                                      target: list, samples_num: int=10000) -> torch.Tensor:
+    nodes_num = len(nodes)
+    assert samples_num <= nodes_num * (nodes_num - 1) / 2
     samples = []
-    for p in pairs:
+    for _ in range(samples_num):
+        p = random.sample(nodes, 2)
         sample = node_emb[str(p[0])] + node_emb[str(p[1])] + [int(target[p[0]] > target[p[1]])]
         samples.append(sample)
     samples = torch.Tensor(samples)

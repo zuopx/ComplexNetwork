@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "C:\\Users\\zuopx\\.conda\\envs\\ComplexNetwork\\python.exe",
+    "python.pythonPath": "C:\\Users\\zuopx\\Anaconda3\\envs\\ComplexNetwork\\python.exe",
     "python.testing.pytestEnabled": true,
     "python.testing.unittestEnabled": false,
     "python.testing.nosetestsEnabled": false,

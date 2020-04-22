@@ -19,5 +19,14 @@ def test_classify(samples: torch.Tensor):
     model = training.classify(samples, D_out, conf)
     print((model(samples[:, :-1].to(device=DEVICE))))
 
+
+def test_early_stop(validation_losses: list):
+    epoch = 10
+    assert training.early_stop(validation_losses, epoch)
+
 def test_hit_rate(class_y_guess, class_y):
     assert training.hit_rate(class_y_guess, class_y) == 0
+
+def test_print_conf():
+    conf = training.Conf()
+    print(conf)

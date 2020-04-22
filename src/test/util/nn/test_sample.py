@@ -7,7 +7,7 @@ def test_get_samples_order_independent_net(SNAPTwitter_nodes, SNAPTwitter_emb,
                                            SNAPTwitter_p_gins):
     samples = sample.get_samples_order_independent_net(SNAPTwitter_nodes, SNAPTwitter_emb,
                                                        SNAPTwitter_p_gins)
-    assert samples.size() == (47278, 257)
+    assert samples.size() == (5000, 257)
 
 def test_split_samples(samples):
     training_set, validation_set = sample.split_samples(samples)

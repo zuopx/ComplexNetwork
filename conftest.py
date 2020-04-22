@@ -44,3 +44,7 @@ def class_y_guess():
 @pytest.fixture()
 def class_y():
     return torch.Tensor([0, 0, 0, 0, 0, 0, 1, 1, 1, 1])
+
+@pytest.fixture()
+def validation_losses():
+    return list(range(9)) + [0]

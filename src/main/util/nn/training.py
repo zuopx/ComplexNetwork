@@ -17,7 +17,20 @@ class Conf:
         self.optimizer = torch.optim.Adam
         self.loss_fn = torch.nn.MSELoss()
         self.lr = 1e-2
+        self.weight_decay = 0.0
         self.n_epochs = 1000
+        self.early_stop_epoch = None
+
+    def __repr__(self):
+        return ('Conf:\n' +
+                f'model: {self.model}\n' +
+                f'activation: {self.activation}\n' +
+                f'optimizer: {self.optimizer}\n' +
+                f'loss_fn: {self.loss_fn}\n' +
+                f'lr: {self.lr}\n' +
+                f'weight_decay: {self.weight_decay}\n' +
+                f'n_epochs: {self.n_epochs}\n' +
+                f'early_stop_epoch: {self.early_stop_epoch}')
 
 
 def classify(samples: torch.Tensor, D_out: int, conf: Conf, ax=None):
@@ -30,14 +43,17 @@ def classify(samples: torch.Tensor, D_out: int, conf: Conf, ax=None):
     validation_y = validation_set[:, D_in:].squeeze(1).long().to(device=DEVICE)
     training_losses, validation_losses = [], []
     model = conf.model(D_in, D_out, conf.activation).to(device=DEVICE)
-    optimizer = conf.optimizer(model.parameters(), lr=conf.lr)
+    optimizer = conf.optimizer(
+        model.parameters(), lr=conf.lr, weight_decay=conf.weight_decay)
     for epoch in range(conf.n_epochs):
         training_y_guess = model(training_x)
         validation_y_guess = model(validation_x)
         training_loss = conf.loss_fn(training_y_guess, training_y)
         validation_loss = conf.loss_fn(validation_y_guess, validation_y)
-        training_losses.append(training_loss)
-        validation_losses.append(validation_loss)
+        training_losses.append(training_loss.item())
+        validation_losses.append(validation_loss.item())
+        if conf.early_stop_epoch and early_stop(validation_losses, conf.early_stop_epoch):
+            break
         optimizer.zero_grad()
         training_loss.backward()
         optimizer.step()
@@ -49,7 +65,15 @@ def classify(samples: torch.Tensor, D_out: int, conf: Conf, ax=None):
           validation hit rate --> {validation_hit_rate: .8f}')
     if ax:
         plot_loss(ax, training_losses, validation_losses)
-    return model
+    return model, validation_hit_rate
+
+
+def early_stop(validation_losses: list, epoch: int) -> bool:
+    if len(validation_losses) >= epoch:
+        if torch.all(validation_losses[-epoch] <=
+                     torch.Tensor(validation_losses[-epoch:])):
+            return True
+    return False
 
 
 def hit_rate(y_guess: torch.Tensor, y: torch.Tensor):
@@ -85,8 +109,8 @@ def regress(samples: torch.Tensor, D_out: int, conf: Conf, ax=None):
 def plot_loss(ax: matplotlib.axes.Axes, training_losses: list, validation_losses: list):
     sz = len(training_losses)
     ax.plot(range(sz), training_losses, c='r',
-            label='t--' + str(training_losses[-1].item()))
+            label='t--' + str(training_losses[-1]))
     ax.plot(range(sz), validation_losses, c='g',
-            label='v--' + str(validation_losses[-1].item()))
-    ax.legend(fontsize=16)
+            label='v--' + str(validation_losses[-1]))
+    # ax.legend(fontsize=16)
     ax.grid(alpha=0.25)
