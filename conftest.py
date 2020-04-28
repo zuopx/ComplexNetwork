@@ -36,15 +36,28 @@ def samples() -> torch.Tensor:
     samples = [[i, i ** 2, i % 2] for i in range(10)]
     return torch.Tensor(samples)
 
+
 @pytest.fixture()
 def class_y_guess():
     y = [[i, 10 - i] for i in range(10)]
     return torch.Tensor(y)
 
+
 @pytest.fixture()
 def class_y():
     return torch.Tensor([0, 0, 0, 0, 0, 0, 1, 1, 1, 1])
 
+
 @pytest.fixture()
 def validation_losses():
     return list(range(9)) + [0]
+
+
+@pytest.fixture()
+def nodes():
+    return list(range(5))
+
+
+@pytest.fixture()
+def res():
+    return 'src/test/util/nodes_map.json'
