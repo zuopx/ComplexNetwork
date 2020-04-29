@@ -1,6 +1,7 @@
 import torch
 import os
 
+
 class GlobalVar:
 
     DB = os.path.join(os.getcwd(), 'db')
