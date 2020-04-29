@@ -41,10 +41,11 @@ def sort_by_cmp(folder_nn, file_emb):
 
     def _sort_by_cmp(x1: int, x2: int):
         x = torch.Tensor(emb[str(x1)] + emb[str(x2)]).unsqueeze(0)
-        s = 0
+        s = 0  # x1x2为逆序的次数
         for model in models:
-            y = model(x).squeeze(0)
-            c = 0 if y[0] > y[1] else 1
+            y = model(x)
+            # c: class, 顺序，属于类别0；逆序，属于类别1.
+            c = y.max(axis=1).indices.item()
             s += c
         return s - len(models) / 2
 

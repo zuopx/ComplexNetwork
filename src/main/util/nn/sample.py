@@ -18,6 +18,7 @@ def get_samples_order_independent_net(nodes: list, node_emb: dict,
     samples = []
     for _ in range(num_samples):
         p = random.sample(nodes, 2)
+        # 顺序，属于类别0；逆序，属于类别1.
         sample = node_emb[str(p[0])] + node_emb[str(p[1])] + \
             [int(target[p[0]] > target[p[1]])]
         samples.append(sample)
