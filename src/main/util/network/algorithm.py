@@ -1,9 +1,11 @@
 import copy
 import random
 from collections import deque
+
 import numpy as np
 from scipy import sparse
 import networkx as nx
+
 
 
 class Algorithm:
@@ -36,7 +38,7 @@ class Algorithm:
         return infected
 
     @staticmethod
-    def breadth_priority_traversal(start_nodes: list, adjacency_table):
+    def breadth_priority_traversal(start_nodes: list, adjacency_table) -> list:
         """图的广度优先遍历
         """
         open = deque(start_nodes)
@@ -203,7 +205,7 @@ class Algorithm:
         return gout
 
     @staticmethod
-    def get_gin(adjacency_table):
+    def get_gin(adjacency_table) -> list:
         rev_at = Algorithm.reverse_graph(adjacency_table)
         visit_sequence = Algorithm.post_travel(rev_at)
         sccs = Algorithm.strongly_connected_components(
@@ -506,3 +508,31 @@ class Algorithm:
                     friend3.append(neighbor)
                     flag[neighbor] = False
         return len(friend1)+len(friend2)+len(friend3)
+
+
+def get_gin_mat_gout_sz(g, beta: float, times: int=1000):
+    gin_mat = sparse.dok_matrix((g.node_num, times), dtype=np.int8)
+    gout_szs = []
+    for t in range(times):
+        sub_at = g.bond_percolation(beta)
+        gin, gout = Algorithm.get_gin_gout(sub_at)
+        for node in gin:
+            gin_mat[node, t] = 1
+        gout_szs.append(len(gout))
+    gin_mat = gin_mat.tocsr()
+    gout_sz = sum(gout_szs) / len(gout_szs)
+    return gin_mat, gout_sz
+
+
+def get_n_gin_mat_gout_sz(g, beta: float, times: int=1000):
+    gin_mat = sparse.dok_matrix((g.node_num, times), dtype=np.int8)
+    gout_szs = []
+    for t in range(times):
+        sub_at = g.n_bond_percolation(beta)
+        gin, gout = Algorithm.get_gin_gout(sub_at)
+        for node in gin:
+            gin_mat[node, t] = 1
+        gout_szs.append(len(gout))
+    gin_mat = gin_mat.tocsr()
+    gout_sz = sum(gout_szs) / len(gout_szs)
+    return gin_mat, gout_sz

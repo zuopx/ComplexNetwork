@@ -2,7 +2,7 @@ import copy
 import random
 from collections import deque
 
-from .algorithm import Algorithm
+from src.main.util.network.algorithm import Algorithm
 
 
 class Graph:
