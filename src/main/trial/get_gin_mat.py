@@ -25,4 +25,4 @@ for beta in betas:
 
     gout_szs_path = f'db/{g_name}/gout_sz/n{beta:.4f}.json'
     with open(gout_szs_path, 'w') as fw:
-        json.dump(gout_szs_path, fw)
+        json.dump(gout_szs, fw)

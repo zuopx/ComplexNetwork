@@ -18,7 +18,7 @@ def sort_by_map(file):  # map, return function
         m = json.load(fr)
 
     def _sort_by_map(x: int):
-        return m[str(x)]
+        return m[x]
 
     return _sort_by_map
 
