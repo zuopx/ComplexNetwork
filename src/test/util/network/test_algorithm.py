@@ -15,7 +15,7 @@ def g():
 def test_get_gin_mat_gout_sz(g):
     beta = 0.1
     times = 100
-    gin_mat, gout_sz = algorithm.get_gin_mat_gout_sz(g, beta, times)
+    gin_mat, gout_sz = algorithm.get_gin_mat_gout_szs(g, beta, times)
     print(gin_mat.sum(), gout_sz)
     assert gin_mat.shape == (10000, 100)
     

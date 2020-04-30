@@ -13,7 +13,7 @@ with open(at_path, 'r')  as fr:
 
 g = network.DirectedGraph(g_name, at)
 
-betas = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4]
+betas = [0.0050, 0.0060, 0.0070, 0.0080, 0.0090, 0.0100]
 
 for beta in betas:
     print(f'{beta:.4f}')
