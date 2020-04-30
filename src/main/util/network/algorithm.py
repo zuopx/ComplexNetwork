@@ -510,7 +510,7 @@ class Algorithm:
         return len(friend1)+len(friend2)+len(friend3)
 
 
-def get_gin_mat_gout_sz(g, beta: float, times: int=1000):
+def get_gin_mat_gout_szs(g, beta: float, times: int=1000):
     gin_mat = sparse.dok_matrix((g.node_num, times), dtype=np.int8)
     gout_szs = []
     for t in range(times):
@@ -520,11 +520,10 @@ def get_gin_mat_gout_sz(g, beta: float, times: int=1000):
             gin_mat[node, t] = 1
         gout_szs.append(len(gout))
     gin_mat = gin_mat.tocsr()
-    gout_sz = sum(gout_szs) / len(gout_szs)
-    return gin_mat, gout_sz
+    return gin_mat, gout_szs
 
 
-def get_n_gin_mat_gout_sz(g, beta: float, times: int=1000):
+def get_n_gin_mat_gout_szs(g, beta: float, times: int=1000):
     gin_mat = sparse.dok_matrix((g.node_num, times), dtype=np.int8)
     gout_szs = []
     for t in range(times):
@@ -534,5 +533,4 @@ def get_n_gin_mat_gout_sz(g, beta: float, times: int=1000):
             gin_mat[node, t] = 1
         gout_szs.append(len(gout))
     gin_mat = gin_mat.tocsr()
-    gout_sz = sum(gout_szs) / len(gout_szs)
-    return gin_mat, gout_sz
+    return gin_mat, gout_szs
