@@ -8,7 +8,10 @@ import src.main.util.network.algorithm as algorithm
 
 g_name, times = 'DiSF_b', 100
 
-betas = (np.arange(100) + 1) * (0.02 / 100)
+betas = (np.arange(100) + 1) * (0.02 / 100)  # DiSF_b
+
+# betas = (np.arange(100) + 1) * (0.015 / 100)  # Twitter
+# betas = (np.arange(100) + 1) * (0.015 / 100)  # Epinions
 
 
 def main():
