@@ -33,7 +33,7 @@ def main():
         gout_std.append(gout_szs.std())
 
     x = [float(_) for _ in betas]
-    y1 = [float(_) for _ in np.array(gout_mean) / 10000]
+    y1 = [float(_) for _ in np.array(gout_mean) / g.node_num]
     y2 = [float(_) for _ in np.array(gout_std) / np.array(gout_mean)]
     data = {
         'x': x,

@@ -7,7 +7,6 @@ from scipy import sparse
 import networkx as nx
 
 
-
 class Algorithm:
     """图相关的算法
 
@@ -510,7 +509,7 @@ class Algorithm:
         return len(friend1)+len(friend2)+len(friend3)
 
 
-def get_gin_mat_gout_szs(g, beta: float, times: int=1000):
+def get_gin_mat_gout_szs(g, beta: float, times: int = 1000):
     gin_mat = sparse.dok_matrix((g.node_num, times), dtype=np.int8)
     gout_szs = []
     for t in range(times):
@@ -523,7 +522,7 @@ def get_gin_mat_gout_szs(g, beta: float, times: int=1000):
     return gin_mat, gout_szs
 
 
-def get_n_gin_mat_gout_szs(g, beta: float, times: int=1000):
+def get_n_gin_mat_gout_szs(g, beta: float, times: int = 1000):
     gin_mat = sparse.dok_matrix((g.node_num, times), dtype=np.int8)
     gout_szs = []
     for t in range(times):
@@ -534,3 +533,50 @@ def get_n_gin_mat_gout_szs(g, beta: float, times: int=1000):
         gout_szs.append(len(gout))
     gin_mat = gin_mat.tocsr()
     return gin_mat, gout_szs
+
+
+def pbga_ga(candidates, virus_set):
+    while [] in virus_set:
+        virus_set.remove([])
+    sorted_candidates = []
+    while virus_set:
+        appear = {}
+        for index, nodes in enumerate(virus_set):
+            for node in nodes:
+                if node not in appear:
+                    appear[node] = []
+                appear[node].append(index)
+        target_candidate = max(appear.keys(), key=lambda x: len(appear[x]))
+        count = 0
+        for index in appear[target_candidate]:
+            virus_set.pop(index - count)
+            count += 1
+        sorted_candidates.append(target_candidate)
+    other_candidates = random.sample(list(set(
+        candidates) - set(sorted_candidates)), len(candidates) - len(sorted_candidates))
+    sorted_candidates += other_candidates
+
+    return sorted_candidates
+
+
+def pbga_gin_mat(candidates, gin_mat):
+    virus_set = []
+    for i in range(gin_mat.shape[1]):
+        virus = []
+        for candidate in candidates:
+            if gin_mat[candidate, i]:
+                virus.append(candidate)
+        virus_set.append(virus)
+
+    seeds = pbga_ga(candidates, virus_set)
+    return seeds
+
+
+def pbga_gin_mat_v2(candidates, gin_mat):
+    c_mat = gin_mat[np.array(candidates)]
+    c_mat = np.hstack((c_mat, np.array([candidates]).T))
+    while c_mat.shape[1] > 1:
+        v = np.argmax(c_mat[:, :-1].sum(axis=1))
+        inds = np.where(c_mat[v, :-1] == 0)
+        c_mat = c_mat[:, inds[0]]
+        
