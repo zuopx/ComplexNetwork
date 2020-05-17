@@ -42,6 +42,7 @@ def classify(samples: torch.Tensor, D_out: int, conf: Conf, ax=None):
     training_y = training_set[:, D_in:].squeeze(1).long().to(device=DEVICE)
     validation_y = validation_set[:, D_in:].squeeze(1).long().to(device=DEVICE)
     training_losses, validation_losses = [], []
+    training_hr, validation_hr = [], []
     model = conf.model(D_in, D_out, conf.activation).to(device=DEVICE)
     optimizer = conf.optimizer(
         model.parameters(), lr=conf.lr, weight_decay=conf.weight_decay)
@@ -52,6 +53,12 @@ def classify(samples: torch.Tensor, D_out: int, conf: Conf, ax=None):
         validation_loss = conf.loss_fn(validation_y_guess, validation_y)
         training_losses.append(training_loss.item())
         validation_losses.append(validation_loss.item())
+
+        training_hit_rate = hit_rate(training_y_guess, training_y)
+        validation_hit_rate = hit_rate(validation_y_guess, validation_y)
+        training_hr.append(training_hit_rate)
+        validation_hr.append(validation_hit_rate)
+
         if conf.early_stop_epoch and early_stop(validation_losses, conf.early_stop_epoch):
             break
         optimizer.zero_grad()
@@ -65,7 +72,7 @@ def classify(samples: torch.Tensor, D_out: int, conf: Conf, ax=None):
           validation hit rate --> {validation_hit_rate: .8f}')
     if ax:
         plot_loss(ax, training_losses, validation_losses)
-    return model, validation_hit_rate
+    return model, training_losses, validation_losses, training_hr, validation_hr
 
 
 def early_stop(validation_losses: list, epoch: int) -> bool:
